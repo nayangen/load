@@ -1,0 +1,46 @@
+services:
+  jmeter-master:
+    build: ./jmeter-master
+    networks:
+      - jmeter-network
+    volumes:
+      - ./test-plans:/test-plans:ro
+      - ./reports:/reports
+    environment:
+      - TEST_PLAN=${TEST_PLAN:-}
+      - JVM_ARGS=-Xms1g -Xmx2g
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 3G
+        reservations:
+          memory: 2G
+
+  jmeter-slave:
+    build: ./jmeter-slave
+    networks:
+      - jmeter-network
+    environment:
+      - JVM_ARGS=-Xms2g -Xmx4g -XX:+UseG1GC
+    deploy:
+      replicas: ${SLAVE_COUNT:-10}
+      resources:
+        limits:
+          memory: 5G
+        reservations:
+          memory: 3G
+      update_config:
+        parallelism: 2
+        delay: 10s
+
+networks:
+  jmeter-network:
+    driver: overlay
+    attachable: true
+
+volumes:
+  jmeter-reports:
