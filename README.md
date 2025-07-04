@@ -1,8 +1,15 @@
 # Quick Start:
 
 ```
-# 1. Deploy the cluster (10 slaves = 100k RPM capacity)
-SLAVE_COUNT=10 ./scripts/deploy.sh
+# 1. Build the images first
+docker build -t jmeter-master:latest ./jmeter-master
+docker build -t jmeter-slave:latest ./jmeter-slave
+
+# 2. Verify images exist
+docker images | grep jmeter
+
+# 3. Deploy the stack
+SLAVE_COUNT=10 docker stack deploy -c docker-compose.yml jmeter-load-test
 
 # 2. Run your test
 docker service update \

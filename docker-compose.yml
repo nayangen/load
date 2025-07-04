@@ -1,6 +1,6 @@
 services:
   jmeter-master:
-    build: ./jmeter-master
+    image: jmeter-master:latest
     networks:
       - jmeter-network
     volumes:
@@ -21,7 +21,7 @@ services:
           memory: 2G
 
   jmeter-slave:
-    build: ./jmeter-slave
+    image: jmeter-slave:latest
     networks:
       - jmeter-network
     environment:
