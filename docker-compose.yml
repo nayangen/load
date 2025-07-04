@@ -4,7 +4,7 @@ services:
     networks:
       - jmeter-network
     volumes:
-      - ./test-plans:/test-plans:ro
+      - ./plans:/test-plans:ro
       - ./reports:/reports
     environment:
       - TEST_PLAN=${TEST_PLAN:-}
